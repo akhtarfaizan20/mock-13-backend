@@ -13,9 +13,26 @@ const createAppointment = async (req, res) => {
 };
 
 const getAppoinments = async (req, res) => {
+  let { specialization, _sort, _order, _q, _page, _limit } = req.query;
   try {
-    let appointments = await AppointmentModel.find();
-    res.send(appointments);
+    if (!specialization) {
+      let appointments = await AppointmentModel.find({
+        name: { $regex: _q || "", $options: "i" },
+      })
+        .limit(_limit)
+        .skip(_limit * (_page - 1))
+        .sort({ [_sort]: _order });
+      res.send(appointments);
+    } else {
+      let appointments = await AppointmentModel.find({
+        name: { $regex: _q || "", $options: "i" },
+        specialization,
+      })
+        .limit(_limit)
+        .skip(_limit * (_page - 1))
+        .sort({ [_sort]: _order });
+      res.send(appointments);
+    }
   } catch (error) {
     console.log(error);
     res.status(400).send({ msg: error });
