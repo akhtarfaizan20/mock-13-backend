@@ -22,7 +22,16 @@ const getAppoinments = async (req, res) => {
   }
 };
 
-const updateAppoinments = async (req, res) => {};
+const updateAppoinments = async (req, res) => {
+  let { _id } = req.params;
+  try {
+    await AppointmentModel.findByIdAndUpdate(_id, req.body);
+    res.send({ msg: "Updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ msg: error });
+  }
+};
 
 module.exports = {
   createAppointment,
