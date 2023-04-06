@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+const JWT_SECRET = "masai";
+
 const registerUser = async (req, res) => {
   let { email, password } = req.body;
   try {
@@ -39,7 +41,7 @@ const loginUser = async (req, res) => {
           console.log(err);
           res.status(400).send({ msg: "Something went wrong in bcrypt" });
         } else if (result) {
-          const token = jwt.sign({ _id: user[0]._id }, process.env.JWT_SECRET);
+          const token = jwt.sign({ _id: user[0]._id }, JWT_SECRET);
           res.send({ token });
         } else {
           res.status(400).send({ msg: "Password didn't matched" });
